@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Commander v2.0 | Advanced Cyber Defense</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #00d4ff;
+            --primary-glow: rgba(0, 212, 255, 0.25);
+            --bg-deep: #0a0c10;
+            --bg-card: #12171d;
+            --border: #30363d;
+            --text-main: #e6edf3;
+            --text-dim: #8b949e;
+            --success: #7ee787;
+            --warning: #f0883e;
+            --danger: #f85149;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(0, 212, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        @keyframes fade-in-up {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-download-active {
+            animation: pulse-glow 2s infinite;
+            border: 1px solid var(--primary) !important;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-deep); color: var(--text-main); margin: 0; line-height: 1.6; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+        /* NAV */
+        nav {
+            backdrop-filter: blur(20px); background: rgba(10, 12, 16, 0.8);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border); padding: 15px 0;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.2rem; display: flex; align-items: center; gap: 12px; text-transform: uppercase; cursor: pointer; }
+        .logo:hover { opacity: 0.9; }
+
+        .nav-links { display: flex; align-items: center; gap: 5px; }
+        .nav-links a { color: var(--text-dim); text-decoration: none; margin-left: 25px; font-size: 0.85rem; transition: var(--transition); position: relative; padding: 5px 0; }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; background: var(--primary); transition: var(--transition); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* HERO */
+        .hero { padding: 180px 0 100px; text-align: center; background: radial-gradient(circle at 50% -20%, #162c46 0%, var(--bg-deep) 70%); position: relative; overflow: hidden; }
+        .hero::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2330363d' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); opacity: 0.3; }
+        .hero h1 { font-size: clamp(2.5rem, 6vw, 4rem); margin: 0; font-weight: 800; position: relative; }
+        .hero p { color: var(--text-dim); margin: 25px auto 40px; max-width: 600px; position: relative; font-size: 1.1rem; }
+        .hero-version { display: inline-block; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; color: var(--primary); margin-bottom: 20px; font-family: 'Fira Code', monospace; position: relative; }
+
+        .btn { padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: var(--transition); border: none; cursor: pointer; font-size: 0.95rem; }
+        .btn-primary { background: var(--primary); color: #000; }
+        .btn-primary:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3); }
+        .btn-secondary { background: #21262d; color: white; border: 1px solid var(--border); }
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--primary); }
+
+        /* STATS CARDS */
+        .stats-bar { padding: 60px 0; border-bottom: 1px solid var(--border); background: rgba(18, 23, 29, 0.5); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; text-align: center; }
+        .stat-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 30px 20px; transition: var(--transition); position: relative; overflow: hidden; cursor: default;
+        }
+        .stat-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0; transition: var(--transition);
+        }
+        .stat-card::after {
+            content: ''; position: absolute; inset: 0; border-radius: 16px;
+            background: radial-gradient(circle at 50% 0%, var(--primary-glow), transparent 70%); opacity: 0; transition: var(--transition);
+        }
+        .stat-card:hover { transform: translateY(-6px); border-color: rgba(0, 212, 255, 0.4); box-shadow: 0 12px 35px rgba(0, 212, 255, 0.12); }
+        .stat-card:hover::before { opacity: 1; }
+        .stat-card:hover::after { opacity: 1; }
+        .stat-card .stat-icon { font-size: 1.6rem; color: var(--primary); margin-bottom: 14px; position: relative; z-index: 1; }
+        .stat-card .stat-number {
+            font-size: 2.5rem; font-weight: 800; color: var(--primary); font-family: 'Fira Code', monospace;
+            position: relative; z-index: 1; line-height: 1;
+        }
+        .stat-card .stat-label { color: var(--text-dim); font-size: 0.82rem; margin-top: 8px; position: relative; z-index: 1; font-weight: 500; }
+        .stat-card:hover .stat-number { text-shadow: 0 0 20px var(--primary-glow); }
+
+        /* FEATURES */
+        .features-section { padding: 100px 0; }
+        .section-title { text-align: center; margin-bottom: 60px; }
+        .section-title h2 { font-size: 2.2rem; font-weight: 800; margin: 0 0 15px; }
+        .section-title p { color: var(--text-dim); max-width: 600px; margin: 0 auto; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .feature-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 35px 28px; transition: var(--transition); position: relative; overflow: hidden;
+        }
+        .feature-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0; transition: var(--transition); }
+        .feature-card:hover { transform: translateY(-4px); border-color: rgba(0, 212, 255, 0.3); }
+        .feature-card:hover::before { opacity: 1; }
+        .feature-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 18px; }
+        .feature-card h3 { margin: 0 0 10px; font-size: 1.05rem; font-weight: 700; }
+        .feature-card p { color: var(--text-dim); font-size: 0.88rem; margin: 0; line-height: 1.7; }
+
+        /* MODULES */
+        .modules-section { padding: 80px 0; background: rgba(18, 23, 29, 0.3); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .modules-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 50px; }
+        .module-item {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+            padding: 22px 18px; text-align: center; transition: var(--transition);
+        }
+        .module-item:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .module-item .module-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+        .module-item .module-name { font-size: 0.82rem; font-weight: 600; color: var(--text-main); }
+
+        /* ADVANTAGES */
+        .advantages-section { padding: 100px 0; }
+        .advantages-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
+        .advantage-list { list-style: none; padding: 0; margin: 0; }
+        .advantage-list li {
+            display: flex; align-items: flex-start; gap: 15px;
+            padding: 18px 0; border-bottom: 1px solid rgba(48, 54, 61, 0.5);
+        }
+        .advantage-list li:last-child { border-bottom: none; }
+        .advantage-list .adv-icon {
+            width: 40px; height: 40px; min-width: 40px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; background: rgba(0, 212, 255, 0.1); color: var(--primary);
+        }
+        .advantage-list .adv-text h4 { margin: 0 0 4px; font-size: 0.95rem; }
+        .advantage-list .adv-text p { margin: 0; color: var(--text-dim); font-size: 0.85rem; }
+
+        .advantage-visual {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 40px; text-align: center; position: relative;
+        }
+        .advantage-visual .terminal-header {
+            display: flex; gap: 6px; margin-bottom: 20px; justify-content: flex-start;
+        }
+        .terminal-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .terminal-content {
+            font-family: 'Fira Code', monospace; font-size: 0.78rem;
+            color: var(--text-dim); text-align: left; line-height: 2;
+        }
+        .terminal-content .line-ok { color: var(--success); }
+        .terminal-content .line-warn { color: var(--warning); }
+        .terminal-content .line-alert { color: var(--danger); }
+        .terminal-content .line-info { color: var(--primary); }
+
+        /* PRICING */
+        .pricing-section { padding: 100px 0; }
+        .pricing-card { background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border); display: flex; flex-wrap: wrap; overflow: hidden; max-width: 850px; margin: 0 auto; }
+        .pricing-info { flex: 1.2; padding: 50px; }
+        .pricing-info h2 { margin: 0 0 10px; }
+        .pricing-info > p { color: var(--text-dim); }
+        .pricing-info ul { list-style: none; padding: 0; color: var(--text-dim); }
+        .pricing-info ul li { padding: 6px 0; }
+        .pricing-info ul li i { margin-right: 8px; }
+        .pricing-action { flex: 0.8; padding: 50px; text-align: center; background: rgba(255,255,255,0.02); border-left: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+
+        /* CONTACT */
+        .contact-section { padding: 80px 0; border-top: 1px solid var(--border); }
+        .contact-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 50px; }
+        .contact-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px;
+            padding: 35px; text-align: center; transition: var(--transition); text-decoration: none; color: inherit;
+            display: block; cursor: pointer; position: relative; overflow: hidden;
+        }
+        .contact-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0; transition: var(--transition);
+            pointer-events: none;
+        }
+        .contact-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 50% 0%, var(--primary-glow), transparent 70%); opacity: 0; transition: var(--transition);
+            pointer-events: none;
+        }
+        .contact-card:hover { border-color: rgba(0, 212, 255, 0.4); transform: translateY(-5px); box-shadow: 0 12px 35px rgba(0, 212, 255, 0.12); }
+        .contact-card:hover::before { opacity: 1; }
+        .contact-card:hover::after { opacity: 1; }
+        .contact-card:active { transform: translateY(-2px) scale(0.98); }
+        .contact-card .contact-icon { font-size: 2rem; color: var(--primary); margin-bottom: 15px; position: relative; z-index: 1; transition: var(--transition); }
+        .contact-card:hover .contact-icon { transform: scale(1.15); text-shadow: 0 0 20px var(--primary-glow); }
+        .contact-card h3 { margin: 0 0 8px; font-size: 1rem; position: relative; z-index: 1; }
+        .contact-card p { color: var(--text-dim); font-size: 0.85rem; margin: 0; position: relative; z-index: 1; }
+        .contact-card .click-hint { display: block; margin-top: 12px; font-size: 0.72rem; color: rgba(0,212,255,0.5); position: relative; z-index: 1; transition: var(--transition); }
+        .contact-card:hover .click-hint { color: var(--primary); }
+
+        /* MAIL POPUP */
+        .mail-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; backdrop-filter: blur(5px); justify-content: center; align-items: center; }
+        .mail-overlay.active { display: flex; }
+        .mail-popup { background: var(--bg-card); border: 1px solid var(--border); border-radius: 20px; padding: 40px; max-width: 420px; width: 90%; text-align: center; position: relative; }
+        .mail-popup h3 { margin: 0 0 8px; font-size: 1.15rem; }
+        .mail-popup .mail-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 25px; }
+        .mail-popup .mail-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-dim); font-size: 1.2rem; cursor: pointer; transition: var(--transition); }
+        .mail-popup .mail-close:hover { color: var(--primary); }
+        .mail-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .mail-option {
+            display: flex; align-items: center; gap: 10px; padding: 14px 18px;
+            background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px;
+            color: var(--text-main); text-decoration: none; font-size: 0.88rem; font-weight: 600;
+            transition: var(--transition); cursor: pointer;
+        }
+        .mail-option:hover { border-color: var(--primary); background: rgba(0,212,255,0.08); color: var(--primary); transform: translateY(-2px); }
+        .mail-option i { font-size: 1.2rem; width: 22px; text-align: center; }
+        .mail-copied { display: none; color: var(--success); font-size: 0.82rem; margin-top: 15px; font-weight: 600; }
+
+        /* FOOTER */
+        footer { padding: 50px 0; text-align: center; border-top: 1px solid var(--border); color: var(--text-dim); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-dim); text-decoration: none; font-size: 0.85rem; transition: var(--transition); }
+        .footer-links a:hover { color: var(--primary); }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .modules-grid { grid-template-columns: repeat(2, 1fr); }
+            .advantages-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            .pricing-card { flex-direction: column; }
+            .pricing-action { border-left: none; border-top: 1px solid var(--border); }
+            .nav-links a { margin-left: 12px; font-size: 0.78rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+    <div class="container nav-content">
+        <a href="#" class="logo" style="text-decoration:none; color:inherit;">
+            <i class="fas fa-shield-halved" style="color:var(--primary)"></i> SOC COMMANDER
+        </a>
+        <div class="nav-links">
+            <a href="#features">Fonctionnalites</a>
+            <a href="#modules">Modules</a>
+            <a href="#advantages">Avantages</a>
+            <a href="#pricing">Tarifs</a>
+            <a href="#contact" style="color:var(--primary)"><i class="fas fa-headset"></i> Support</a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <div class="container">
+        <h1>Next-Gen <span style="color:var(--primary)">Cyber Defense</span> Engine</h1>
+        <div class="hero-version">v2.0 — Edition Professionnel</div>
+        <p>Surveillance proactive, monitoring temps reel, detection de menaces et assistant IA integre. La solution SOC tout-en-un pour les professionnels de la cybersecurite.</p>
+        <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; position: relative;">
+            <a href="https://github.com/Riadh35/soc-commander/releases/download/V2.0/SOC_Commander_2.0.msi" class="btn btn-primary btn-download-active">
+                <i class="fas fa-download"></i> Telecharger le MSI (33.3 MB)
+            </a>
+            <a href="#contact" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i> Contact Support
+            </a>
+        </div>
+    </div>
+</header>
+
+<!-- STATS CARDS -->
+<section class="stats-bar">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-cubes"></i></div>
+                <div class="stat-number">11</div>
+                <div class="stat-label">Modules Specialises</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-terminal"></i></div>
+                <div class="stat-number">108</div>
+                <div class="stat-label">Outils Integres</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-language"></i></div>
+                <div class="stat-number">2</div>
+                <div class="stat-label">Langues (FR / EN)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-palette"></i></div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">Themes Visuels</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="features-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Fonctionnalites <span style="color:var(--primary)">Cles</span></h2>
+            <p>Un centre de commandement complet pour la securite de votre infrastructure.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(0,212,255,0.1); color:var(--primary);">
+                    <i class="fas fa-gauge-high"></i>
+                </div>
+                <h3>Monitoring Temps Reel</h3>
+                <p>Jauges circulaires animees pour CPU, RAM et disque. Metriques systeme, reseau et securite avec rafraichissement automatique configurable.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(126,231,135,0.1); color:var(--success);">
+                    <i class="fas fa-shield-virus"></i>
+                </div>
+                <h3>Detection de Menaces</h3>
+                <p>Moteur de securite temps reel : detection de ports backdoor (4444, 1337, 31337), processus suspects et connexions anormales.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(240,136,62,0.1); color:var(--warning);">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Capture de Paquets</h3>
+                <p>Sniffing reseau en direct via Scapy. Filtrage par protocole, statistiques temps reel, export CSV et sauvegarde PCAP.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(168,133,255,0.1); color:#a885ff;">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3>Assistant IA (Ollama)</h3>
+                <p>LLM local integre pour l'analyse d'incidents. Injection automatique du contexte SOC, streaming temps reel, 100% hors ligne.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(248,81,73,0.1); color:var(--danger);">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <h3>Alertes Multi-Niveaux</h3>
+                <p>Systeme d'alertes avec severite Critique, Warning et Info. Acquittement, historique, filtrage avance et export CSV.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon" style="background:rgba(0,212,255,0.1); color:var(--primary);">
+                    <i class="fas fa-file-lines"></i>
+                </div>
+                <h3>Rapports Professionnels</h3>
+                <p>8 types de rapports (journalier, securite, executif...). Export HTML, TXT, CSV avec apercu integre et impression directe.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules" class="modules-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>11 Modules <span style="color:var(--primary)">Specialises</span></h2>
+            <p>Chaque aspect de votre infrastructure couvert par un module dedie.</p>
+        </div>
+        <div class="modules-grid">
+            <div class="module-item">
+                <span class="module-icon">📊</span>
+                <span class="module-name">Tableau de Bord</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">📡</span>
+                <span class="module-name">Capteurs</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🖥️</span>
+                <span class="module-name">Equipements</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🌐</span>
+                <span class="module-name">Reseau</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🛡️</span>
+                <span class="module-name">Securite</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">📡</span>
+                <span class="module-name">Capture Paquets</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🚨</span>
+                <span class="module-name">Alertes</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🛠️</span>
+                <span class="module-name">Outils (108)</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🧠</span>
+                <span class="module-name">Assistant IA</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">📈</span>
+                <span class="module-name">Rapports</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">⚙️</span>
+                <span class="module-name">Parametres</span>
+            </div>
+            <div class="module-item">
+                <span class="module-icon">🔐</span>
+                <span class="module-name">Licence HWID</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ADVANTAGES -->
+<section id="advantages" class="advantages-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Pourquoi choisir <span style="color:var(--primary)">SOC Commander</span> ?</h2>
+            <p>Les avantages qui font la difference face aux solutions classiques.</p>
+        </div>
+        <div class="advantages-grid">
+            <div>
+                <ul class="advantage-list">
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="adv-text">
+                            <h4>Solution Tout-en-Un</h4>
+                            <p>11 modules dans une seule application. Plus besoin de jongler entre plusieurs outils : monitoring, securite, capture, IA et rapports reunis.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-lock"></i></div>
+                        <div class="adv-text">
+                            <h4>100% Local et Securise</h4>
+                            <p>Aucune donnee envoyee sur Internet. L'IA fonctionne en local via Ollama. Vos donnees restent sur votre infrastructure.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-language"></i></div>
+                        <div class="adv-text">
+                            <h4>Bilingue FR / EN</h4>
+                            <p>Interface entierement traduite en francais et anglais avec changement en temps reel. Plus de 180 cles de traduction.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-palette"></i></div>
+                        <div class="adv-text">
+                            <h4>3 Themes Professionnels</h4>
+                            <p>SOC Dark, Cyber Blue et Matrix Green. Personnalisez l'apparence selon vos preferences ou votre environnement.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-fingerprint"></i></div>
+                        <div class="adv-text">
+                            <h4>Licence liee au Materiel</h4>
+                            <p>Activation par empreinte machine unique (HWID). Protection anti-tampering, anti-debug et anti-reverse engineering integree.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="adv-icon"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="adv-text">
+                            <h4>Paiement Unique, Pas d'Abonnement</h4>
+                            <p>Une seule licence, pas de frais recurrents. Mises a jour v2.x incluses et support technique par email.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="advantage-visual">
+                <div class="terminal-header">
+                    <div class="terminal-dot" style="background:#f85149;"></div>
+                    <div class="terminal-dot" style="background:#f0883e;"></div>
+                    <div class="terminal-dot" style="background:#7ee787;"></div>
+                </div>
+                <div class="terminal-content">
+                    <div class="line-info">[SOC Commander v2.0] Demarrage...</div>
+                    <div class="line-ok">&#10003; Integrite du fichier verifiee (SHA-256)</div>
+                    <div class="line-ok">&#10003; Anti-debug : aucun debugger detecte</div>
+                    <div class="line-ok">&#10003; DEP active avec succes</div>
+                    <div class="line-ok">&#10003; Licence FULL validee</div>
+                    <div class="line-ok">&#10003; Moteur de securite demarre</div>
+                    <div class="line-info">[Dashboard] CPU: 23% | RAM: 61% | Disk: 45%</div>
+                    <div class="line-info">[Capteurs] 12 actifs | 0 critiques</div>
+                    <div class="line-warn">&#9888; [Securite] Nouvelle connexion port 3389 (RDP)</div>
+                    <div class="line-alert">&#10007; [Alerte] Port 4444 detecte — backdoor potentiel</div>
+                    <div class="line-ok">&#10003; [IA] Ollama connecte — llama3.1 pret</div>
+                    <div class="line-info">[Capture] 1,247 paquets analyses</div>
+                    <div class="line-ok">&#10003; Tous les modules operationnels</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="pricing-section container">
+    <div class="section-title">
+        <h2>Licence <span style="color:var(--primary)">Professionnelle</span></h2>
+        <p>Un investissement unique pour une protection permanente.</p>
+    </div>
+    <div class="pricing-card">
+        <div class="pricing-info">
+            <h2>Licence FULL</h2>
+            <p>Protection illimitee et activation par HWID.</p>
+            <ul>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> 11 modules complets et sans restriction</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> 108 outils reseau et administration</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> Assistant IA integre (Ollama)</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> Capture de paquets et analyse reseau</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> Mises a jour v2.x incluses</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> Support technique par email</li>
+                <li><i class="fas fa-check" style="color:var(--success)"></i> Licence permanente, sans abonnement</li>
+            </ul>
+        </div>
+        <div class="pricing-action">
+            <div style="font-size: 3rem; font-weight: 800;">49&#8364;</div>
+            <p style="color:var(--text-dim); margin-bottom: 5px;">Paiement unique</p>
+            <p style="color:var(--success); font-size:0.8rem; margin-bottom: 25px;"><i class="fas fa-infinity"></i> Licence permanente</p>
+            <a href="https://paypal.me/ryad36/49" class="btn btn-primary" target="_blank" rel="noopener">
+                <i class="fab fa-paypal"></i> ACHETER MAINTENANT
+            </a>
+            <p style="color:var(--text-dim); font-size:0.75rem; margin-top: 15px;">
+                <i class="fas fa-shield-halved"></i> Paiement securise via PayPal
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Support & <span style="color:var(--primary)">Contact</span></h2>
+            <p>Besoin d'aide, d'une licence ou d'informations ? Contactez-nous.</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-card" onclick="openMailPopup('support')">
+                <div class="contact-icon"><i class="fas fa-headset"></i></div>
+                <h3>Support Technique</h3>
+                <p>riadh.khaled@gmail.com</p>
+                <span class="click-hint"><i class="fas fa-envelope"></i> Choisir votre messagerie</span>
+            </div>
+            <div class="contact-card" onclick="openMailPopup('licence')">
+                <div class="contact-icon"><i class="fas fa-key"></i></div>
+                <h3>Demande de Licence</h3>
+                <p>Envoyez votre fingerprint pour recevoir votre cle</p>
+                <span class="click-hint"><i class="fas fa-envelope"></i> Choisir votre messagerie</span>
+            </div>
+            <a href="https://github.com/Riadh35/soc-commander/issues" target="_blank" rel="noopener" class="contact-card">
+                <div class="contact-icon"><i class="fab fa-github"></i></div>
+                <h3>GitHub Issues</h3>
+                <p>Signalez un bug ou proposez une amelioration</p>
+                <span class="click-hint"><i class="fas fa-arrow-up-right-from-square"></i> Ouvre GitHub</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- MAIL POPUP -->
+<div class="mail-overlay" id="mailOverlay" onclick="if(event.target===this)closeMailPopup()">
+    <div class="mail-popup">
+        <button class="mail-close" onclick="closeMailPopup()">&times;</button>
+        <h3 id="popupTitle">Envoyer un email</h3>
+        <div class="mail-subtitle">Choisissez votre service de messagerie</div>
+        <div class="mail-options">
+            <a id="opt-gmail" class="mail-option" target="_blank" rel="noopener">
+                <i class="fab fa-google" style="color:#ea4335"></i> Gmail
+            </a>
+            <a id="opt-outlook" class="mail-option" target="_blank" rel="noopener">
+                <i class="fab fa-microsoft" style="color:#0078d4"></i> Outlook
+            </a>
+            <a id="opt-yahoo" class="mail-option" target="_blank" rel="noopener">
+                <i class="fab fa-yahoo" style="color:#6001d2"></i> Yahoo
+            </a>
+            <div class="mail-option" onclick="copyEmail()">
+                <i class="fas fa-copy" style="color:var(--primary)"></i> Copier email
+            </div>
+        </div>
+        <div class="mail-copied" id="mailCopied"><i class="fas fa-check"></i> riadh.khaled@gmail.com copie !</div>
+    </div>
+</div>
+
+<script>
+function openMailPopup(type) {
+    var to = 'riadh.khaled@gmail.com';
+    var subject, body, title;
+    if (type === 'support') {
+        subject = 'Support SOC Commander v2.0';
+        body = 'Bonjour,\n\nJ\'ai besoin d\'aide concernant SOC Commander.\n\nDescription du probleme :\n\nCordialement';
+        title = 'Contacter le Support';
+    } else {
+        subject = 'Demande de licence SOC Commander v2.0';
+        body = 'Bonjour,\n\nJe souhaite obtenir une licence SOC Commander v2.0.\n\nNom / Societe : \nMon fingerprint machine : [COLLER ICI]\nType de licence : FULL\n\nCordialement';
+        title = 'Demande de Licence';
+    }
+    var s = encodeURIComponent(subject);
+    var b = encodeURIComponent(body);
+    document.getElementById('popupTitle').textContent = title;
+    document.getElementById('opt-gmail').href = 'https://mail.google.com/mail/?view=cm&to=' + to + '&su=' + s + '&body=' + b;
+    document.getElementById('opt-outlook').href = 'https://outlook.live.com/mail/0/deeplink/compose?to=' + to + '&subject=' + s + '&body=' + b;
+    document.getElementById('opt-yahoo').href = 'https://compose.mail.yahoo.com/?to=' + to + '&subject=' + s + '&body=' + b;
+    document.getElementById('mailCopied').style.display = 'none';
+    document.getElementById('mailOverlay').classList.add('active');
+}
+function closeMailPopup() {
+    document.getElementById('mailOverlay').classList.remove('active');
+}
+function copyEmail() {
+    navigator.clipboard.writeText('riadh.khaled@gmail.com').then(function() {
+        document.getElementById('mailCopied').style.display = 'block';
+    });
+}
+</script>
+
+<!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-links">
+            <a href="#features">Fonctionnalites</a>
+            <a href="#modules">Modules</a>
+            <a href="#advantages">Avantages</a>
+            <a href="#pricing">Tarifs</a>
+            <a href="#contact">Support</a>
+            <a href="mailto:riadh.khaled@gmail.com">Contact</a>
+            <a href="https://github.com/Riadh35/soc-commander" target="_blank" rel="noopener">GitHub</a>
+        </div>
+        <p>&copy; 2026 <strong>Riadh Ben Khaled</strong>. Engineering for Security.</p>
+        <p style="font-size:0.75rem; margin-top:5px;">SOC Commander v2.0 — Edition Professionnel</p>
+    </div>
+</footer>
+
+</body>
+</html>
