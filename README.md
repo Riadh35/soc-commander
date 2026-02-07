@@ -143,82 +143,10 @@ Elle centralise la supervision des systemes, la detection de menaces, l'analyse 
 - Selection de theme (3 themes)
 - Aide et documentation integrees
 - Informations legales / Disclaimer
-
----
-
-## Prerequis
-
-| Composant | Version | Obligatoire |
-|-----------|---------|-------------|
-| Python | 3.8+ | Oui |
-| PyQt6 | 6.4+ | Oui |
-| psutil | 5.9+ | Recommande |
-| requests | 2.28+ | Recommande |
-| scapy | 2.5+ | Optionnel |
-| pywin32 | 300+ | Optionnel |
-| PyQt6-Charts | 6.4+ | Optionnel |
-
-**Systeme d'exploitation :** Windows 10 / 11
-
----
-
-## Installation
-
-### 1. Cloner le depot
-
-```bash
-git clone <url-du-depot>
-cd SOC_Project
-```
-
-### 2. Creer un environnement virtuel
-
-```bash
-python -m venv venv
-venv\Scripts\activate
-```
-
-### 3. Installer les dependances
-
-```bash
-pip install -r requirements.txt
-```
-
-Ou manuellement :
-
-```bash
-# Obligatoire
-pip install PyQt6
-
-# Recommande
-pip install psutil requests
-
-# Optionnel
-pip install scapy pywin32 PyQt6-Charts
-```
-
-### 4. Lancer l'application
-
-```bash
-python soc_commander.py
-```
-
----
-
-## Utilisation
-
-### Lancement
-
-```bash
-# Depuis les sources
-python soc_commander.py
-
-# Depuis l'executable (apres build)
-SOC_Commander.exe
-```
-
+### Installation 
+Lancer le Fichier MSI : double clic sur ( SOC_Commander_2.0.msi )
+l'application s'installe et creer un racourcci sur le Bureau .
 ### Premier lancement
-
 1. L'application demarre en **mode demo** (7 jours d'essai)
 2. Le **fingerprint machine** est affiche dans l'onglet Parametres
 3. Copiez le fingerprint et envoyez-le a l'administrateur
@@ -290,21 +218,6 @@ SOC_Commander.exe
 | `soc_license.lic` | Cle de licence chiffree (XOR + Base64) |
 | `.soc_demo_start` | Marqueur chiffre de debut de periode d'essai |
 
-### Outil de generation de licences
-
-```bash
-# Interface graphique (PyQt6)
-python generate_soc_license.py
-
-# Mode ligne de commande
-python generate_soc_license.py --cli --name "Client" --fingerprint "ABC123" --type FULL
-
-# Depuis un fichier fingerprint
-python generate_soc_license.py --file machine_fingerprint.txt --name "Client"
-```
-
----
-
 ## Integration IA (Ollama)
 
 ### Principe
@@ -364,107 +277,12 @@ L'interface est entierement traduite en **Francais** et **Anglais**.
 - Changement de langue en temps reel dans les parametres
 - Couvre tous les modules, boutons, labels, messages et tooltips
 
----
-
-## Architecture Technique
-
-### Structure du code (9 298 lignes)
-
-```
-soc_commander.py
-|
-+-- TRANSLATIONS                     Dictionnaire bilingue FR/EN (180+ cles)
-+-- TranslationManager               Gestionnaire de traductions
-|
-+-- Modeles de donnees
-|   +-- SensorStatus (Enum)          Etats des capteurs (UP/DOWN/WARNING/PAUSED/UNKNOWN)
-|   +-- Sensor (dataclass)           Modele de capteur avec seuils
-|   +-- Alert (dataclass)            Modele d'alerte avec severite
-|
-+-- Gestionnaires
-|   +-- SensorManager                Cycle de vie des capteurs + alertes
-|   +-- LicenseManager               Fingerprinting + validation licence
-|
-+-- Widgets personnalises
-|   +-- GaugeWidget                  Jauge circulaire animee (QPainter)
-|   +-- MiniBarChartWidget           Mini graphique a barres
-|   +-- MetricSummaryCard            Carte metrique compacte
-|   +-- SensorStatusWidget           Widget statut capteur
-|
-+-- Moteurs de traitement (QThread)
-|   +-- NetworkScanWorker            Scan reseau asynchrone (ping/DNS/ARP)
-|   +-- SecurityLogEngine            Surveillance securite temps reel
-|   +-- PCAPCaptureEngine            Capture de paquets (Scapy)
-|   +-- OllamaWorker                 Communication IA asynchrone
-|   +-- GeoIPEngine                  Geolocalisation IP
-|
-+-- Protection
-|   +-- CodeProtection               Anti-debug, anti-RE, integrite fichier
-|
 +-- Themes CSS/QSS
 |   +-- STYLE                        SOC Dark (defaut)
 |   +-- STYLE_CYBER_BLUE             Cyber Blue
 |   +-- STYLE_MATRIX_GREEN           Matrix Green
 |   +-- THEMES                       Dictionnaire nom -> stylesheet
 |
-+-- SOCCommanderUltraComplete        Fenetre principale (QMainWindow)
-    +-- _build_header()              En-tete avec titre et statistiques
-    +-- _build_tab_dashboard()       Onglet tableau de bord
-    +-- _build_tab_sensors()         Onglet capteurs
-    +-- _build_tab_devices()         Onglet equipements
-    +-- _build_tab_network()         Onglet reseau
-    +-- _build_tab_security()        Onglet securite
-    +-- _build_tab_capture()         Onglet capture paquets
-    +-- _build_tab_alerts()          Onglet alertes
-    +-- _build_tab_tools()           Onglet outils (108 commandes)
-    +-- _build_tab_ai()              Onglet assistant IA
-    +-- _build_tab_reports()         Onglet rapports
-    +-- _build_tab_settings()        Onglet parametres
-    +-- apply_theme()                Application dynamique des themes
-```
-
-### Technologies
-
-| Technologie | Usage |
-|-------------|-------|
-| **PyQt6** | Framework GUI (widgets, layouts, evenements) |
-| **QThread** | Operations asynchrones (scan, IA, capture) |
-| **QTimer** | Rafraichissement periodique des metriques |
-| **QGraphicsView** | Topologie reseau interactive |
-| **QPainter** | Jauges circulaires personnalisees |
-| **QCharts** | Graphiques de tendances (optionnel) |
-| **psutil** | Metriques systeme (CPU, RAM, disque, reseau, processus) |
-| **scapy** | Capture et analyse de paquets reseau |
-| **subprocess** | Execution de commandes systeme |
-| **hashlib / base64** | Chiffrement et fingerprinting |
-| **ctypes** | Appels Windows API (DEP, debugger detection) |
-
----
-
-## Dependances
-
-### requirements.txt
-
-```
-PyQt6>=6.4.0
-psutil>=5.9.0
-requests>=2.28.0
-scapy>=2.5.0
-pywin32>=300
-PyQt6-Charts>=6.4.0
-```
-
-### Comportement sans dependances optionnelles
-
-| Dependance manquante | Impact | Fallback |
-|---------------------|--------|----------|
-| psutil | Pas de metriques systeme reelles | Valeurs simulees |
-| scapy | Capture de paquets desactivee | Onglet indisponible |
-| pywin32 | Pas de journaux Windows | Logs systeme non accessibles |
-| PyQt6-Charts | Pas de graphiques avances | Widgets simples |
-| requests | Assistant IA non disponible | Onglet IA desactive |
-
----
 
 ## Configuration
 
@@ -480,35 +298,9 @@ PyQt6-Charts>=6.4.0
 | URL Ollama | http://localhost:11434 | Adresse du serveur Ollama |
 | Temperature IA | 0.7 | Creativite des reponses (0.0 - 2.0) |
 
-### Fichiers
-
-| Fichier | Format | Role |
-|---------|--------|------|
-| `soc_commander.py` | Python | Script principal (~9 300 lignes) |
-| `generate_soc_license.py` | Python | Generateur de licences (GUI + CLI) |
-| `requirements.txt` | Texte | Liste des dependances pip |
-| `config/soc_config.json` | JSON | Configuration persistante |
-| `soc_license.lic` | Chiffre | Licence d'activation |
-| `machine_fingerprint.txt` | Texte | Empreinte materielle |
-| `.soc_demo_start` | Chiffre | Marqueur periode d'essai |
-| `license_history.json` | JSON | Historique des licences generees |
-
----
-
 ## Securite et Protection
 
 ### Anti-tampering (CodeProtection)
-
-L'application integre des mecanismes de protection au demarrage et en continu :
-
-| Protection | Methode |
-|-----------|---------|
-| Verification d'integrite | Hash SHA-256 du fichier source |
-| Anti-debug | `IsDebuggerPresent()` via ctypes |
-| Anti-reverse engineering | Detection d'outils RE (IDA, Ghidra, x64dbg, OllyDbg, etc.) |
-| DEP | `SetProcessDEPPolicy()` via ctypes |
-| Verrouillage fichier | Protection du binaire contre modification |
-| Surveillance continue | QTimer periodique de verification |
 
 ### Detection de menaces reseau
 
