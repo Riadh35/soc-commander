@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary: #00d4ff;
-            --primary-glow: rgba(0, 212, 255, 0.25);
+            --primary-glow: rgba(0, 212, 255, 0.4); /* Intensifié pour l'effet visuel */
             --bg-deep: #0a0c10;
             --bg-card: #12171d;
             --border: #30363d;
@@ -74,9 +74,9 @@
 
         .btn { padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center; gap: 10px; transition: var(--transition); border: none; cursor: pointer; font-size: 0.95rem; }
         .btn-primary { background: var(--primary); color: #000; }
-        .btn-primary:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 8px 25px rgba(0, 212, 255, 0.3); }
+        .btn-primary:hover { transform: translateY(-2px); background: #fff; box-shadow: 0 0 20px var(--primary-glow); }
         .btn-secondary { background: #21262d; color: white; border: 1px solid var(--border); }
-        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--primary); }
+        .btn-secondary:hover { transform: translateY(-2px); border-color: var(--primary); color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
 
         /* STATS CARDS */
         .stats-bar { padding: 60px 0; border-bottom: 1px solid var(--border); background: rgba(18, 23, 29, 0.5); }
@@ -215,14 +215,27 @@
         .mail-popup .mail-subtitle { color: var(--text-dim); font-size: 0.85rem; margin-bottom: 25px; }
         .mail-popup .mail-close { position: absolute; top: 15px; right: 20px; background: none; border: none; color: var(--text-dim); font-size: 1.2rem; cursor: pointer; transition: var(--transition); }
         .mail-popup .mail-close:hover { color: var(--primary); }
+        
+        /* Options de messagerie avec effet de survol lueur */
         .mail-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
         .mail-option {
-            display: flex; align-items: center; gap: 10px; padding: 14px 18px;
-            background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px;
-            color: var(--text-main); text-decoration: none; font-size: 0.88rem; font-weight: 600;
+            display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+            background: #1a1f26; border: 1px solid #30363d; border-radius: 12px;
+            color: var(--text-main); text-decoration: none; font-size: 0.95rem; font-weight: 600;
             transition: var(--transition); cursor: pointer;
         }
-        .mail-option:hover { border-color: var(--primary); background: rgba(0,212,255,0.08); color: var(--primary); transform: translateY(-2px); }
+        .mail-option:hover { 
+            border-color: var(--primary); 
+            background: #21262d; 
+            transform: translateY(-2px); 
+            box-shadow: 0 0 15px var(--primary-glow); 
+        }
+        
+        .mail-option i.fa-google { color: #ea4335; }
+        .mail-option i.fa-envelope { color: #0078d4; }
+        .mail-option i.fa-yahoo { color: #6001d2; }
+        .mail-option i.fa-copy { color: #00d4ff; }
+        
         .mail-option i { font-size: 1.2rem; width: 22px; text-align: center; }
         .mail-copied { display: none; color: var(--success); font-size: 0.82rem; margin-top: 15px; font-weight: 600; }
 
@@ -585,7 +598,7 @@
                 <i class="fab fa-yahoo"></i> Yahoo
             </a>
             <div class="mail-option" onclick="copyEmail()">
-                <i class="fas fa-copy"></i> Copier
+                <i class="fas fa-copy"></i> Copier email
             </div>
         </div>
         <div class="mail-copied" id="mailCopied">Adresse email copiee !</div>
@@ -603,7 +616,7 @@
             <a href="mailto:riadh.khaled@gmail.com">Contact</a>
             <a href="https://github.com/Riadh35/soc-commander" target="_blank" rel="noopener">GitHub</a>
         </div>
-        <p>&copy; 2024 SOC Commander. Developpe par Riadh Khaled. Tous droits reserves.</p>
+        <p>&copy; 2026 SOC Commander © Developpe par Riadh Ben Khaled © Tous droits reserves.</p>
     </div>
 </footer>
 
