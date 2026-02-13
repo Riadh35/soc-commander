@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XML_DIZ_INFO>
+    <MASTER_PAD_VERSION_INFO>
+        <MASTER_PAD_VERSION>4.0</MASTER_PAD_VERSION>
+        <MASTER_PAD_EDITOR_ID>RiadhBenKhaled</MASTER_PAD_EDITOR_ID>
+        <MASTER_PAD_INFO>Information about the Portable Application Description (PAD) standard can be found at http://www.asp-shareware.org</MASTER_PAD_INFO>
+    </MASTER_PAD_VERSION_INFO>
+    <Company_Info>
+        <Company_Name>SOC Commander</Company_Name>
+        <Address_1>Online / Remote</Address_1>
+        <City_Town>Rennes</City_Town>
+        <Country>France</Country>
+        <Company_WebSite_URL>https://soc-commander.web.app/</Company_WebSite_URL>
+        <Contact_Info>
+            <Contact_First_Name>Riadh</Contact_First_Name>
+            <Contact_Last_Name>Ben Khaled</Contact_Last_Name>
+            <Contact_Email>riadh.khaled@gmail.com</Contact_Email>
+        </Contact_Info>
+    </Company_Info>
+    <Program_Info>
+        <Program_Name>SOC Commander</Program_Name>
+        <Program_Version>2.0</Program_Version>
+        <Program_Release_Month>6</Program_Release_Month>
+        <Program_Release_Day>180</Program_Release_Day>
+        <Program_Release_Year>2026</Program_Release_Year>
+        <Program_Cost_Dollars>49.00</Program_Cost_Dollars>
+        <Program_Cost_Other_Code>EUR</Program_Cost_Other_Code>
+        <Program_Cost_Other>49.00</Program_Cost_Other>
+        <Program_Type>Shareware</Program_Type>
+        <Program_Release_Status>Major Update</Program_Release_Status>
+        <Program_Install_Support>Install and Uninstall</Program_Install_Support>
+        <Program_OS_Support>Win10,Win11,WinServer</Program_OS_Support>
+        <Program_Language>French,English</Program_Language>
+        <File_Size_MB>142</File_Size_MB>
+        <Program_Category_Class>Security &amp; Privacy::Network Monitoring</Program_Category_Class>
+        <Program_Specific_Category>Cybersecurity SOC Tool</Program_Specific_Category>
+        
+        <Program_Descriptions>
+            <English>
+                <Keywords>SOC, Cybersecurity, Network Monitoring, Threat Detection, Packet Capture, AI Assistant, Nmap, Wireshark</Keywords>
+                <Char_Desc_45>Professional SOC &amp; Network Monitoring Tool</Char_Desc_45>
+                <Char_Desc_80>SOC Commander: All-in-one professional cybersecurity and network monitoring tool.</Char_Desc_80>
+                <Char_Desc_250>SOC Commander v2.0 is a comprehensive cybersecurity platform featuring real-time monitoring, 108 integrated network tools, threat detection, and a local AI assistant via Ollama for incident response.</Char_Desc_250>
+                <Char_Desc_450>SOC Commander v2.0 is a professional-grade cybersecurity solution designed for SOC and NOC environments. It includes 11 specialized modules for threat hunting, vulnerability scanning, and deep packet analysis. With over 108 integrated tools like Nmap and Wireshark Core, it provides absolute visibility over your infrastructure. It features a unique local AI assistant (Ollama) to help analysts interpret threats in real-time.</Char_Desc_450>
+            </English>
+            
+            <French>
+                <Keywords>SOC, Cybersécurité, Monitoring Réseau, Détection Menaces, IA, Sécurité Informatique</Keywords>
+                <Char_Desc_45>Solution Pro de Cybersécurité et SOC</Char_Desc_45>
+                <Char_Desc_80>SOC Commander : Plateforme complète de monitoring et défense cyber professionnelle.</Char_Desc_80>
+                <Char_Desc_250>SOC Commander v2.0 est une solution de cybersécurité incluant monitoring temps réel, 108 outils réseau experts, détection de menaces proactive et un assistant IA local pour une réponse aux incidents ultra-rapide.</Char_Desc_250>
+            </French>
+        </Program_Descriptions>
+    </Program_Info>
+    <Web_Info>
+        <Application_URLs>
+            <Application_Info_URL>https://soc-commander.web.app/</Application_Info_URL>
+            <Application_Order_URL>https://soc-commander.web.app/#pricing</Application_Order_URL>
+            <Application_Screenshot_URL>https://soc-commander.web.app/images/og-image.png</Application_Screenshot_URL>
+            <Application_Icon_URL>https://soc-commander.web.app/favicon.ico</Application_Icon_URL>
+            <Application_XML_File_URL>https://soc-commander.web.app/soc-commander-pad.xml</Application_XML_File_URL>
+        </Application_URLs>
+        <Download_URLs>
+            <Primary_Download_URL>https://github.com/Riadh35/soc-commander/releases/download/v2.0/SOC_Commander_v2.0_Setup.msi</Primary_Download_URL>
+        </Download_URLs>
+    </Web_Info>
+</XML_DIZ_INFO>
